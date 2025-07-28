@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>أذكار الصباح والمساء - Ahmed Kanifo 2025©</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8833214481506510"
+     crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -356,16 +358,16 @@
             .adhkar-container {
                 grid-template-columns: 1fr;
             }
-            
+
             h1 {
                 font-size: 2.2rem;
             }
-            
+
             .tab-btn {
                 padding: 12px 25px;
                 font-size: 1rem;
             }
-            
+
             .dhikr-text {
                 font-size: 1.2rem;
             }
@@ -376,12 +378,12 @@
                 flex-direction: column;
                 align-items: center;
             }
-            
+
             .tab-btn {
                 width: 100%;
                 max-width: 300px;
             }
-            
+
             .dhikr-meta {
                 flex-direction: column;
             }
@@ -536,13 +538,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             // إنشاء أذكار الصباح
             renderAdhkar('morning-adhkar', morningAdhkar);
-            
+
             // إنشاء أذكار المساء
             renderAdhkar('evening-adhkar', eveningAdhkar);
-            
+
             // تحديث الإحصائيات
             updateStats();
-            
+
             // تهيئة أحداث الأزرار
             initEvents();
         });
@@ -551,14 +553,14 @@
         function renderAdhkar(containerId, adhkarList) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            
+
             adhkarList.forEach((dhikr, index) => {
                 const delay = index * 100;
-                
+
                 const dhikrCard = document.createElement('div');
                 dhikrCard.className = 'dhikr-card';
                 dhikrCard.style.animationDelay = `${delay}ms`;
-                
+
                 dhikrCard.innerHTML = `
                     <div class="dhikr-text">${dhikr.text}</div>
                     <div class="dhikr-meta">
@@ -581,9 +583,9 @@
                         <span>تم الذكر</span>
                     </button>
                 `;
-                
+
                 container.appendChild(dhikrCard);
-                
+
                 // تهيئة العداد
                 state.counters[`${containerId}-${index}`] = 0;
             });
@@ -596,128 +598,6 @@
                 button.addEventListener('click', () => {
                     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
                     document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
-                    
+
                     button.classList.add('active');
-                    document.getElementById(`${button.dataset.tab}-content`).classList.add('active');
-                    
-                    updateStats();
-                });
-            });
-            
-            // أحداث العدادات
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('.counter-btn')) {
-                    const btn = e.target.closest('.counter-btn');
-                    const counterDisplay = btn.closest('.counter').querySelector('.counter-display');
-                    const dhikrCard = btn.closest('.dhikr-card');
-                    const dhikrIndex = Array.from(dhikrCard.parentElement.children).indexOf(dhikrCard);
-                    const containerId = dhikrCard.parentElement.id;
-                    const key = `${containerId}-${dhikrIndex}`;
-                    
-                    if (btn.classList.contains('plus')) {
-                        state.counters[key]++;
-                    } else if (btn.classList.contains('minus') && state.counters[key] > 0) {
-                        state.counters[key]--;
-                    }
-                    
-                    counterDisplay.textContent = state.counters[key];
-                    checkCompletion(dhikrCard, containerId, dhikrIndex);
-                    updateStats();
-                }
-                
-                // أحداث إكمال الذكر
-                if (e.target.closest('.complete-btn')) {
-                    const btn = e.target.closest('.complete-btn');
-                    const dhikrCard = btn.closest('.dhikr-card');
-                    const dhikrIndex = Array.from(dhikrCard.parentElement.children).indexOf(dhikrCard);
-                    const containerId = dhikrCard.parentElement.id;
-                    
-                    const key = `${containerId}-${dhikrIndex}`;
-                    const required = containerId.includes('morning') ? 
-                        morningAdhkar[dhikrIndex].times : 
-                        eveningAdhkar[dhikrIndex].times;
-                    
-                    if (state.counters[key] < required) {
-                        state.counters[key] = required;
-                        dhikrCard.querySelector('.counter-display').textContent = required;
-                    }
-                    
-                    btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>تم الذكر</span>';
-                    btn.classList.add('completed');
-                    dhikrCard.classList.add('completed');
-                    
-                    if (containerId.includes('morning')) {
-                        if (!state.completedMorning.includes(dhikrIndex)) {
-                            state.completedMorning.push(dhikrIndex);
-                        }
-                    } else {
-                        if (!state.completedEvening.includes(dhikrIndex)) {
-                            state.completedEvening.push(dhikrIndex);
-                        }
-                    }
-                    
-                    updateStats();
-                }
-            });
-        }
-
-        // التحقق من إكمال الذكر
-        function checkCompletion(dhikrCard, containerId, dhikrIndex) {
-            const key = `${containerId}-${dhikrIndex}`;
-            const btn = dhikrCard.querySelector('.complete-btn');
-            const required = containerId.includes('morning') ? 
-                morningAdhkar[dhikrIndex].times : 
-                eveningAdhkar[dhikrIndex].times;
-            
-            if (state.counters[key] >= required) {
-                btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>تم الذكر</span>';
-                btn.classList.add('completed');
-                dhikrCard.classList.add('completed');
-                
-                if (containerId.includes('morning')) {
-                    if (!state.completedMorning.includes(dhikrIndex)) {
-                        state.completedMorning.push(dhikrIndex);
-                    }
-                } else {
-                    if (!state.completedEvening.includes(dhikrIndex)) {
-                        state.completedEvening.push(dhikrIndex);
-                    }
-                }
-            } else {
-                btn.innerHTML = '<i class="fas fa-check"></i> <span>تم الذكر</span>';
-                btn.classList.remove('completed');
-                dhikrCard.classList.remove('completed');
-                
-                if (containerId.includes('morning')) {
-                    const index = state.completedMorning.indexOf(dhikrIndex);
-                    if (index > -1) state.completedMorning.splice(index, 1);
-                } else {
-                    const index = state.completedEvening.indexOf(dhikrIndex);
-                    if (index > -1) state.completedEvening.splice(index, 1);
-                }
-            }
-        }
-
-        // تحديث الإحصائيات
-        function updateStats() {
-            const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
-            
-            let total, completed;
-            if (activeTab === 'morning') {
-                total = morningAdhkar.length;
-                completed = state.completedMorning.length;
-            } else {
-                total = eveningAdhkar.length;
-                completed = state.completedEvening.length;
-            }
-            
-            document.getElementById('completed-counter').textContent = `${completed} مكتملة`;
-            document.getElementById('total-counter').textContent = `${completed} من ${total}`;
-            
-            const progress = document.getElementById('progress');
-            const percentage = total > 0 ? (completed / total) * 100 : 0;
-            progress.style.width = `${percentage}%`;
-        }
-    </script>
-</body>
-</html>
+                    document.getElementById(`${button.dataset.tab}-content`).classList.ad
